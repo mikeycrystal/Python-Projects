@@ -1,0 +1,238 @@
+{
+    "usable": ["wand", "magic mirror", "pensieve", "timeturner", "crystal ball", "broomstick", "quill"],
+    "wearable": ["cloak", "hat", "crown", "ring", "diadem", "robes", "gloves", "necklace", "pendant", "amulet"],
+    "container": ["chest", "cabinet", "box", "closet"],
+    "fancyBaseObj": ["mirror", "vase", "necklace", "sword", "urn", "chest", "box", "crown", "coronet", "ring", "goblet"],
+
+    "mysterious": ["sinister", "glowing", "hidden", "secret", "pulsing", "mysterious", "enigmatic", "forbidden", "enchanted"],
+    "baseObject": ["potion", "necklace", "circlet", "ring", "wand", "cauldron", "cloak"],
+    "aMagicalObject": ["the #mysterious# #fancyBaseObj# of #metal# inset with #preciousStone#", "a working cellphone", "a flying motorcycle", "#aFamousObject#", "#aFamousObject#", "#aFamousObject#", "the #baseObject# of #ancientCharacter#", "#baseObject.a# of #potionPower#"],
+    "aFamousObject": ["the Philosopher's Stone", "Ravenclaw's diadem", "Slytherin's locket", "Hufflepuff's cup", "the sword of Godric Gryffindor", "a time turner", "a phoenix feather", "an invisibility cloak", "one of Voldemort's horcruxes", "the diary of Tom Riddle", "the Sorting Hat"],
+
+    "color": ["blue", "red", "yellow", "orange", "violet", "grey", "silver", "green", "bright pink", "pink"],
+
+
+    "bird": ["grackle", "parakeet", "cockatiel", "hyacinth macaw", "barn owl", "long-eared owl", "magpie", "raven", "common crow", "spectacled owl", "Eastern screech owl", "snowy owl", "Eurasian eagle owl", "great horned owl", "Northern pygmy owl", "tawny fish owl", "sea eagle", "bald eagle", "red-tailed hawk", "mountain buzzard", "turkey vulture", "feral chicken", "peregrine falcon", "long-tailed honey buzzard", "pelican", "hornbill", "house sparrow", "American flamingo", "white-breasted woodswallow", "leucistic Indian peacock", "kingfisher", "long-wattled umbrellabird", "mandarin duck", "greater bird-of-paradise", "scissor-tailed flycatcher", "golden pheasant", "domestic duck", "Canadian goose"],
+
+    "metal": ["bronze", "gold", "gilt", "silver", "brass", "iron", "aluminum"],
+
+    "stoneModifier": ["sea", "water", "fire", "ember", "sun", "soul"],
+    "preciousStone": ["mirrors", "#monster#bone", "rubies", "pearls", "diamonds", "sapphires", "opals", "#stoneModifier#stones", "#stoneModifier# opals"],
+
+    "wandAdj": ["blunt", "austere", "solid", "sharply curved", "curvy", "gnarled", "twisted", "curled", "misshapen", "crooked", "straight", "narrow", "thin", "wiggly", "stubby", "bent", "whippy", "flexible", "lithe", "stocky"],
+    "plainWood": ["cherry", "yew", "rowan", "ash", "redwood", "pearwood", "driftwood", "dogwood", "maple", "oak", "pine", "bamboo", "boxwood", "cherrywood", "mahogany", "ebony"],
+    "wandWood": ["old broomsticks", "deeply-carved #plainWood#", "a baseball bat", "recycled railway ties", "recycled #plainWood#", "smooth #plainWood#", "polished #plainWood#", "rough-hewn #plainWood#", "#metal#-wrapped #plainWood#", "#metal#-inlaid #plainWood#", "#plainWood# inlaid with #preciousStone#", "sentient #plainWood#", "burled #plainWood#", "#monster# ivory", "#monster#bone", "cursed #plainWood#", "an old umbrella handle", "a cricket bat", "a vintage cigarette holder", "#metal#", "whalebone", "recycled plastic", "old pencils", "rolled up newspaper", "pages from an old phonebook", "fiberglass", "reclaimed Ikea furniture", "wood from a gallows", "an old axe handle", "the stickshift of an '89 Miata", "wood from a broken guitar", "wood from a sunken ship", "holly", "sentient pearwood"],
+    "wandCore": ["creamy nougat", "a twizzler", "licorice", "coffee grounds", "chocolate ganache", "hairs from Dumbledore's beard", "mermaid hair", "melted #color# crayon", "heartstring of a dragon, just not a very impressive one", "#color# yarn", "#color# and #color# ribbons", "braided #monster# hair", "#monster# hair", "#monster# hair", "braided #monster# whiskers", "#bird# feathers", "compressed #substance#", "#substance#", "liquid #substance#", "#metal#"],
+    "wand": ["#wandAdj#, made of #wandWood# with a core of #wandCore#"],
+
+    "cockneyEnd": ["onks", "inks", "ilbo", "uggle", "iggles", "ippo", "inky", "anks", "ox", "obbles", "oks", "ago", "illy", "imby", "ips", "ix", "ixie", "oxie", "ozzer", "izz", "incy", "ancy"],
+    "cockneyStart": ["t", "phl", "ph", "w", "m", "n", "dr", "b", "gr", "p", "sph", "z", "qu"],
+    "cockney": ["#cockneyStart##cockneyEnd#"],
+
+    "latinStart": ["aqu", "port", "fidel", "fer", "fin", "incant", "corp", "lib", "collo", "ment", "conv", "cruc", "naus", "def", "del", "descr", "merc", "nih", "bomb", "emend", "asc", "av", "kedavr", "baubl", "bill", "augm", "quant", "hept", "fract", "al", "mor", "ant", "aparec", "eruct", "exult", "exum", "arr", "moment"],
+    "latinEnd": ["ilo", "um", "is", "ito", "o", "ingo", "a", "era", "ivo", "io", "ato", "arda", "ium", "ai", "ia", "esto", "ious"],
+    "latin": ["#latinStart##latinEnd#"],
+
+    "britNameStart": ["Gild", "Col", "Bust", "Lup", "Rem", "Pen", "Herm", "Row", "Hel", "Min", "Amel", "Xers", "Luc", "Nig", "Niv", "Amyr", "Reg", "Bart", "Barth", "Marv", "Wilhelm", "Call", "Anton", "Ever", "Fil", "Aug", "Arg", "Nicol", "Marc", "Alb", "Aber", "Vern", "Elph", "Rod", "Oll", "Olph", "Angel", "Prisc", "Rub", "Lucr", "Godr", "Bath", "Phin", "Phil", "Sir", "Ser", "Vinc"],
+    "britNameEnd": ["a", "in", "us", "eus", "ore", "etia", "eas", "us", "ivia", "en", "o", "eroy", "iope", "ephina", "erva", "ione", "ient", "yll", "yllis", "illa", "inda", "ius", "ecta", "el", "ella", "una", "inald", "ina", "icent", "iana", "usta", "astan"],
+    "britName": ["#britNameStart##britNameEnd#"],
+    "surnamePre": ["O'", "Mc", "Mac", "d'", "von "],
+    "britSurname": ["#britSurnameStart##britSurnameEnd#", "#surnamePre##britSurnameStart##britSurnameEnd#", "#britSurnameStart##britSurnameEnd#"],
+    "britSurnameStart":["Chest","Quell","Quick","Cress","Mal","West","Slug","Rook","Sprout","Witch","Scrim","Love","Lang","Short","Clear","Long","East","North","River","South","Snith","Cross","Aft","Aver","Ever","Down","Whit","Rob","Rod","Hesel","Kings","Queens","Ed","Sift","For","Farring","Coven","Craig","Cath","Chil","Clif","Grit","Grand","Orla","Prat","Milt","Wrath","Wilt","Berk","Draft","Red","Black"],
+    "britSurnameEnd":["castle","hammer","well","wand","foy","master","branch","corn","hill","water","haven","witch","bane","good","end","scour","horn","wrench","bottom","hammer","wick","shire","gren","glen","swith","bury","every","stern","deroy","heart","ner","brath","mill","bly","ham","tine","field","groat","well","bow","bone","wind","storm","horn","thorne","cart","bry","roy","ton","man","watch","leath","heath","ley"],
+    "firstName": "#britName#",
+    "lastName": "#britSurname#",
+
+    "latinConj": ["ad", "ex", "si", "et", "aut"],
+
+    "dangerousObject": ["a long-forgotten curse", "Hagrid's pet #monster#", "a hatching #monster# egg", "dementors", "the Ministry of Magic", "magically-enhanced sexual tension", "a poorly-mixed potion", "a malfunctioning broomstick", "a mispronounced spell", "the wrong wand gesture", "an ancient curse", "drinking #drink# made with #plants# and #substance#"],
+
+    "killed": ["cursed into oblivion by #dangerousObject#", "killed by deatheaters", "#devoured# by #monster.a#", "imprisoned in Azkhaban", "blown up by #dangerousObject#"],
+
+    "professor": ["Alastor Moody", "Argus Filch", "Dolores Umbridge", "Sybill Trelawny", "Prof Sprout", "Prof McGonagall", "Dumbledore", "Snape", "Remus Lupin", "Gilderoy Lockheart", "Prof Flitwick", "Hagrid"],
+    "otherAdult": ["Madam Rosmerta", "Stan Shunpike", "Cornelius Fudge", "Nymphadora Tonks", "Arthur Weasley", "Rita Skeeter", "Sirius Black", "Lucius Malfoy", "Igor Karkaroff", "Peter Pettigrew", "Madame Maxine"],
+    "adult": ["#professor#", "#otherAdult#"],
+
+    "ancientCharacter": ["Beedle the Bard", "Nicolas Flamel", "Uric the Oddball", "Gaspard Shingleton, inventor of the self-stirring cauldron", "Egbert the Egregious", "Bathilda Bagshot", "the Bloody Baron", "Nearly Headless Nick", "Grindelwald", "The Grey Lady", "Regulus Black"],
+    "character": ["Victor Krum", "Dudsley Dursley", "Draco Malfoy", "Ron Weasley", "Cho Chang", "Harry Potter", "Ginny Weasley", "Hermione Granger", "Colin Creevey", "Seamus Finnigan", "Dean Thomas", "Lavender Brown", "Lee Jordan", "Neville Longbottom", "Parvati Patil", "Fred Weasley", "George Weasley", "Percy Weasley", "Oliver Wood", "Hannah Abbott", "Susan Bones", "Cedric Diggory", "Ernie Macmillan", "Justin Finch-Fletchley", "Luna Lovegood", "Millicent Bulstrode", "Vincent Crabbe", "Gregory Goyle", "Marcus Flint"],
+
+    "toLocation": ["into the Forbidden Forest", "to the Room of Requirement", "to the library", "to the dungeons", "into the secret tunnels", "into the Prefects Bathroom", "to #professor#'s office", "behind the Quiddich stands", "into Hogsmeade", "into the Shrieking Shack"],
+
+    "misbehaveWith": ["make out with", "fool around with", "smoke a joint with", "smoke muggle cigarettes with", "buy #aMagicalObject# from", "trade #fieldOfStudy# notes with", "buy illegal potions from", "practice #fieldOfStudy# with", "practice hexes on", "sell illicit hexes to", "trade smutty magazines with"],
+
+    "situation": ["attempting to apparate into #coolLocation#", "sneaking #toLocation# to #misbehaveWith# #character#", "while drunk on butterbeer", "breaking into #professor#'s office to look for #desirables#", "looking for #desirables# in #hogwartsLocation#", "fleeing from #threat#"],
+
+    "plants": ["Horklumps", "flobberworms", "goosegrass", "agapanthus flowers", "ashphodel blossoms", "baneberries", "hemlock", "silverweed", "shrivelfig", "hellebore", "cobra lilies", "starthistles", "bloodroot", "tormentil", "valeria", "mistletoe", "witch hazel", "hornbeam", "gillyweed", "gurdyroot", "Devil's Snare", "dandelion root", "fire seed", "flitterblossoms", "sneezewort", "fluxweed", "starthistle", "moondew petals", "venomous Tentacula", "puffapods", "#plainWood# bark", "vervain"],
+    "seaMonster": ["grindylow", "merperson", "sea serpent", "shrake", "hippocampus", "kelpie"],
+    "landMonster": ["manticore", "centaur", "ghoul", "troll", "unicorn", "bowtruckle", "basilisk", "chimaera"],
+    "flyingMonster": ["hippogriff", "griffin", "phoenix", "sphinx", "chimaera", "thestral", "common Welsh dragon", "Norwegian Ridgeback", "Hungarian Horntail"],
+    "monster": ["#seaMonster#", "#flyingMonster#", "#landMonster#"],
+
+    "purchaseSource": ["on ebay", "from Craigslist", "from a #personalityTrait# stranger at #shop#", "from an antique shop", "from Wizarding Wheezes", "as a birthday present"],
+    "monsterOrigin": ["had been living there for years", "had been summoned by #fieldOfStudy.a# class", "had been bought by Hagrid #purchaseSource#"],
+
+    "threat": ["an escaped #monster#", "#monster.a# that #monsterOrigin#", "a plague of ambulatory #plants#", "magical fallout from #dangerousObject#"],
+
+    "coolLocation": ["the Romanian Dragon Sanctuary", "the Quidditch World Cup", "a Weird Sisters concert", "a strip club", "the girls bathroom", "Hogsmeade", "a Gringott's vault", "Burning Man"],
+
+    "potionPower": ["#personalityTrait#", "fire-breathing", "water-breathing", "forgetfulness", "flying", "poison", "invisiblity", "love", "memory-enhacement"],
+
+    "second": ["first", "second", "third", "fourth", "fifth", "sixth", "seventh"],
+    "duringHogwarts": ["In your #second# year,", "Just before final exams"],
+
+    "deathPre": ["#duringHogwarts.capitalize#"],
+    "devoured": ["mauled", "devoured", "eaten", "eviscerated"],
+
+    "incorrect": ["mislabeled", "cursed", "the wrong kind of", "too much", "expired"],
+    "potion": ["potion"],
+    "deathCause": ["you brew #potion.a# of #potionPower#. Unfortunately you made it with #incorrect# #substance# and you die horribly of #malady#", "you are trampled by a herd of #monster.s# #normalSituation#", "you are #devoured# by #angry.a# #monster# that #monsterOrigin#", "you were #devoured# by #flyingMonster.a# while attempting to fly it to #coolLocation#", "you are dragged into the lake by #angry.a# #seaMonster# #normalSituation#"],
+
+    "deathAfterwards": ["You could have been saved by #aMagicalObject#, but noone had one.", "#noOneNotices.capitalize#", "#professor# fails to revive you.", "You die later in St Mungo's Hospital.", "Your remains were used for many years by students in #fieldOfStudy#.", "Only #character# cries at your funeral", "Everyone except #character# cries at your funeral", "Years later, #character# still leaves flowers at your grave."],
+
+    "youDieAtHogwarts": ["#deathPre# #deathCause#. #deathAfterwards#. "],
+
+    "normalSituation": ["during a school picnic", "on #fieldOfStudy.a# field trip", "during #fieldOfStudy.a# lesson", "while watching the Triwizard tournament", "while trying to complete your #fieldOfStudy# final", "while gathering #plants#"],
+    "angry": ["enraged", "hungry", "angry", "irritable", "rabid", "confused"],
+
+    "spellName": ["#latin# #latin#", "#latin# #latin#", "#latin# ex #latin#", "#latin##latin#"],
+
+    "creature": ["#pet#", "#monster#"],
+    "substance": ["#color# paint", "Bertie Bott's Everyflavor beans", "#creature# milk", "#creature# blood", "butterbeer", "magic", "parchment", "milk", "broken mirrors", "quill ink", "enriched uranium", "peppermint oil", "dust", "#creature# dander", "#metal#", "garlic", "gluten", "green cheese"],
+    "personalityAdj": ["untrustworthy", "unreliable", "well-adjusted", "ambitious", "athletic", "charismatic", "intellectual", "artistic", "brilliant", "gifted", "distant", "wealthy", "aristocratic", "domineering", "proud", "impoverished", "gloomy", "insincere", "exuberant", "quiet", "obnoxious", "studious", "easily-distracted", "morose", "imaginative", "pleasant", "sinister"],
+    "personAdj": ["tall", "raven-haired", "asthmatic", "#color#-haired", "flame-haired", "silver-haired", "short", "waifish", "attractive", "unassuming", "athletic", "bespectacled", "allergic to #substance#", "#personalityAdj#", "#personalityAdj#", "#personalityAdj#", "#personalityAdj#", "#personalityAdj#", "#personalityAdj#"],
+
+    "monsterAdj": ["damaged", "baby", "balding", "elderly", "fearful", "enormous", "invisible", "#color#", "affectionate", "aggressive", "immobile", "dead", "stuffed", "playful", "enchanted", "fat", "mottled", "magical", "secretly human", "friendly", "tame", "ginger"],
+
+    "inYourYear": [" ever", "of your family", " in the last 20 years", " since #professor#", " in your year", " in the wizarding world"],
+
+    "somewhat": ["quite", "very", "tragically", "rather", "distressingly", "unfortunately", "passably", "insufficiently"],
+    "destiny": ["the most #personalityAdj# student #inYourYear#", "secretly the child of #adult#", " #somewhat# #personalityAdj#", "the only surviving descendent of #ancientCharacter#", "foretold as the chosen one by an ancient prophesy"],
+
+    "nicknamed": ["but people call you", "nicknamed", "but everyone insists on calling you"],
+
+    "petName": ["#britName#", "#britName#", "#britSurname#", "#britName#", "#britName#", "#britSurname#", "Mr #cockney.capitalize#", "Mrs #cockney.capitalize#"],
+
+    "noOneNotices": ["nothing changes", "this makes little difference", "this just makes things difficult", "no one notices", "no one knows this", "no one cares", "in the end it doesn't matter"],
+    "introduction": [", #nicknamed# #cockney.capitalize#. You are #personalityAdj# and #somewhat# #personalityAdj#. ", ", #personAdj# and #personAdj#. You have #monsterAdj.a# #pet# named #petName#. ", ". You were raised by your #personalityAdj# #relative##relativeDetail#.", ". You are #destiny#, but #noOneNotices#."],
+
+    "relativeDetail": [", the last of an ancient wizarding family", ", a famous #statusOcc#", ", #occupation#", ", #occupation#", ", who works as #occupation#", ", member of an ancient and sinister order", ", secretly a Deatheater", ", a spy for #organization#"],
+
+    "deptAdj": ["misplaced", "forbidden", "hidden", "magical", "lost", "flying", "cursed", "disappearing", "sinister"],
+    "deptNoun": ["muggles", "artifacts", "vehicles", "medicine", "disease control", "infrastructure", "prophesy", "justice"],
+    "dept": ["#deptAdj.capitalizeAll# #deptNoun.capitalizeAll#", "#monster.capitalize# Services"],
+    "director": ["secretary", "undersecretary", "director"],
+    "shopclerk": ["accountant", "accounts manager", "shopclerk", "manager"],
+    "magicalJob": ["the #director.capitalize# of #dept#", "#shopclerk# at #shop#"],
+    "ranch": ["ranch", "farm", "sanctuary"],
+    "muggleJob": ["music teacher", "sysadmin", "physical therapist", "hairdresser", "accountant", "dentist", "insurance actuary", "veterinarian", "plumber", "lumberjack", "pinball repairman", "advertising executive", "waitress", "waiter", "short-order cook", "zoologist"],
+    "statusOcc": ["classical musician", "#fieldOfStudy# scholar", "Quidditch player", "writer of magical books", "author", "adventurer"],
+
+    "organization": ["the Order of the Phoenix", "the House Elf Liberation Front", "the Ministry of Magic"],
+    "publication": ["The Quibbler", "Witch Weekly", "Transfiguration Today", "The Daily Mail", "The Daily Prophet"],
+    "writer": ["editor", "correspondent", "writer"],
+    "occupation": ["writer for #publication#", "a muggle #muggleJob#", "a spy for #organization#", "a #shopclerk# at #shop#", "#director# at #dept#"],
+
+    "relative": ["aunt", "uncle", "grandmother", "grandfather", "mother", "father", "godfather", "godmother"],
+
+    "pet": ["owl", "rat", "cat", "#bird#", "frog", "toad", "hamster"],
+    "animal": ["okapi", "deer", "dolphin", "lemur", "slow loris", "three-toed sloth", "jaguar", "gnu", "yak", "coati", "wolf", "coyote", "rattlesnake", "cobra", "panda", "red panda", "opossum", "stick bug", "millipede", "centipede", "butterfly", "housecat", "sea otter", "river otter", "ostrich", "emu", "wallaby", "sheep", "ram", "stag", "doe", "donkey", "stallion", "mare", "#pet#"],
+    "creature": ["#pet#", "#monster#", "#animal#"],
+
+    "cause": ["bringing down the Ministry of Magic", "banning Quidditch", "freeing house elves", "enslaving house elves", "harassing muggles", "bringing back the Dark Lord", "defeating Voldemort"],
+
+    "drink": ["beer", "bootleg gin", "herbal tea", "#potionPower# potions"],
+
+    "hobby": ["looking for #aMagicalObject#", "playing Quidditch", "sneaking #toLocation# to #misbehaveWith# #character#", "photography", "collecting Chocolate Frog Cards", "playing practical jokes", "studying", "feeling superior to others", "unraveling mysteries", "playing chess"],
+    "voiceRange": ["mezzo-soprano", "baritone", "tenor", "bass", "alto-soprano"],
+    "lifestyleTrait": ["brew #drink# from #plants#", "run a secret society devoted to #cause#", "publish a newsletter", "spy for the Ministry of Magic", "#misbehaveWith# #character#", "#misbehaveWith# #character#", "#misbehaveWith# #character#", "write smutty fanfic", "write editorials for the Daily Prophet", "collect gossip for the Quibbler", "publish anonymous articles about #cause#", "try out for the Quidditch Team", "watch Quidditch", "sing #voiceRange# in the school choir", "collect Muggle artifacts", "practice dark magic", "enjoy #hobby#", "hate #hobby#", "pretend to enjoy #hobby#", "like #hobby#", "have many friends", "have no real friends"],
+
+    "side": ["right", "left"],
+    "bodyPart": ["head", "whole body", "liver", "heart", "blood", "skin", "#side# hand", "#side# ear", "#side# eye", "hair", "nose", "#side# foot", "#side# leg"],
+
+    "fieldOfStudy": ["Care of Magical Creatures", "Divination", "Herbology", "Transfiguration", "History of Magic", "Astronomy", "Charms", "Potions", "Arithmancy", "Muggle Studies", "Study of Ancient Runes", "Alchemy"],
+
+    "uselessPower": ["make your #bodyPart# #fallOff#", "make an enemy's #bodyPart# #fallOff#", "turn any #color# object #color#", "turn your #bodyPart# #color#", "turn #substance# into #substance#", "cause a mild garlic allergy", "cause mild exema", "find a lost umbrella, but only after buying a new one", "calculate the correct tip on a restaurant bill", "translate lost languages into other lost languages", "turn your #bodyPart# into #substance#"],
+
+    "shop": ["The Leaky Cauldron", "Ollivanders", "Honeydukes", "Weasleys' Wizard Wheezes", "Flourish & Blotts", "Borgin & Burkes", "The Three Broomsticks", "Zonko's Joke Shop", "The Hog's Head", "Scrivenshaft's Quill Shop", "St Mungo's Hospital", "Knockturn Alley"],
+    "realEstateLocation": ["above #shop#", "behind #shop#", "across from #shop#", "on Diagon Alley", "outside of Little Whinging", "near the Ministry of Magic", "in Hogsmeade", "outside of Hogsmeade", "near Cornwall"],
+    "apartment": ["cupboard under the stairs", "vast and empty mansion", "ancient ruin", "crumbling castle", "cheap flat", "pleasant cottage", "abandoned house"],
+
+    "direction": ["western", "eastern", "northern", "southern"],
+    "geography": ["Scotland", "Lincolnshire", "Ireland", "Yorkshire", "British Columbia", "#direction# Wales", "#direction# France", "#direction# England", "#direction# Australia"],
+    "location": ["#monster# farm in #geography#", "#apartment# in #geography#", "grim orphanage", "#apartment#", "bleak island off of #geography#"],
+
+    "subroom": ["hallway", "bathroom", "broom closet", "office", "dormitory", "stairwell", "alcove"],
+    "house": ["Ravenclaw", "Griffindor", "Hufflepuff", "Slytherin"],
+    "famousLocation": ["Room of Requirement", "Prefects Bathroom", "Chamber of Secrets", "Moaning Myrtle's bathroom", "passage beneath the Whomping Willow", "tunnel to Hogsmeade"],
+    "hogwartsLocation": ["the #famousLocation#", "#professor#'s office", "#subroom.a# in #house#", "#subroom.a# in #famousLocation#"],
+    "hiddenIn": ["in", "hidden in", "behind the wall of", "in a false drawer in", "in the closet", "on a shelf in"],
+
+    "hex": ["curse", "enchantment", "spell", "hex", "charm"],
+
+    "postschool": ["join a band", "work at a muggle coffeeshop", "become a moderately successful muggle #muggleJob#"],
+
+    "personalityTraitAdv": ["insufficient", "unbearable", "intense", "unfailing", "unseemly", "inappropriate", "unfortunate", "lack of", "meager"],
+    "personalityTrait": ["pride", "curiosity", "paranoia", "charisma", "intellect", "hard work", "lactose intolerance", "fear", "bravery", " violence", "indecisiveness", "malevolence", "mercy", "naivete", "persuasivness", "cynicism", "sarcasm", "cheerfulness", " enthusiasm", "sentimentality"],
+
+    "grades": ["mediocre NEWTs in #fieldOfStudy#", "failing grades in #fieldOfStudy#"],
+    "someDeliberation": ["no thought at all", "much deliberation", "minutes of argument"],
+    "firstYear": ["#bird.a.capitalize# delivers your Hogwarts letter to the #location# where you live. ", "Your wand is #wand#. ", "Your wand is #wand#. ", "Your wand is #wand#. ", "Your wand is #wand#. "],
+    "enterHogwarts": ["You are #firstName# #lastName##introduction# #firstYear#"],
+
+    "but": ["until", "but", "then one day"],
+
+    "isDamaged": ["never grows back", "never grows back, but you get a magical new one", "is never the same", "is deeply scarred"],
+
+    "negativeEffect": ["#character# made fun of you", "#character# snitched on you", "#professor# caught you", "#professor# deducts 10 points from your house", "are interrupted by #monster.a#", "#dangerousObject# spoils the moment", "#character# told everyone you faked it", "that only made the #monster# #angry#"],
+    "positiveEffect": ["winning the House Cup", "#character# was impressed", "earning the admiration of your peers"],
+    "effect": ["and you #doSomething#", "until interrupted by #dangerousObject#", "#positiveEffect#", "but #negativeEffect#", "though #negativeEffect#", "earning you momentary fame", "allowing you to pass #fieldOfStudy#", "though this does not help you pass #fieldOfStudy#", "though this does not help you defeat #angry.a# #monster#", "#magicalEffect#"],
+    "magicalEffect": ["causing you to immediately #fallOff#", "but your #bodyPart# #fallOff.firstS#"],
+
+    "desirables": ["proof of a conspiracy", "test answers", "loose change", "a secret chamber", "hidden passageways", "beer", "exam solutions", "a map to secret treasure", "a secret prophecy", "weed", "muggle cigarettes", "dirty magazines", "a potion of #potionPower#", "naked pictures of #professor#", "a stack of Chocolate Frog Cards", "signed photos of Gilderoy Lockheart"],
+    "butYouLoseIt": [", which you sell to #character# for #desirables#", ", but misplace it #situation#", ". Unfortunately, it is cursed, and just touching it causes your #bodyPart# to #fallOff#", " which is immediately confiscated by #professor#"],
+
+    "fallOff": ["turn invisible", "turn to #substance#", "teleport to a new dimension", "burst into flames", "turn #color#", "float to the ceiling", "disapparate", "fall to the floor", "fly away", "turn into a flock of #bird.s#", "melt"],
+
+    "lick": ["kiss", "lick", "eat", "touch"],
+
+    "provenance": ["was #hiddenIn# #hogwartsLocation#", "you found in #hogwartsLocation#", "you stole from #professor#", "you had inherited from your #relative#", "you bought on ebay", "you bought at #shop#"],
+    "interactWithMagicObject": ["#lick# #aMagicalObject#", "open the #mysterious# #container# #hiddenIn# #hogwartsLocation#", "put on the #mysterious# #wearable# you found #hiddenIn# #hogwartsLocation#", "use #usable.a# that #provenance#", "drink #mysterious.a# #color# potion", "mix #substance# and #substance# and drink the result"],
+
+    "instantly": ["regrettably", "unsurprisingly", "to the amusement of your peers", "to your delight, ", "unexpectedly ", "irreversibly ", "inevitably", "instantly ", "sadly"],
+
+    "respect": ["love", "envy", "respect"],
+    "friends": ["best friends", "cautious friends", "bitter rivals", "close friends", "secret allies", "sworn enemies", "secret lovers", "co-conspirators"],
+    "doSomething": ["discover a terrible secret about #character#", "fall out of love with #character#", "#fallOff#", "fail #fieldOfStudy#", "pass #fieldOfStudy#", "become #friends# with #character#", "are banned from #shop#", "gain the #respect# of your peers", "gain the #respect# of #character#", "lose the #respect# of #character#", "transmogrify into #creature.a#"],
+    "youDoButEffect": [".  This causes your #bodyPart# to #fallOff#. ", ". #instantly.capitalize# this causes you to #doSomething#. ", ". As a result you #doSomething#. ", ", and you #doSomething#. ", " and #instantly# you #fallOff#. ", ".  #instantly.capitalize# you #doSomething#. ", " and you learn the value of #personalityTrait#. "],
+
+    "dare": ["#character# dares you to #interactWithMagicObject##youDoButEffect#"],
+
+    "youOrSomeone": ["you", "you", "everyone at school"],
+
+    "doMagic": ["brew a potion", "cast a spell", "cast a curse", "perform a ritual"],
+
+    "reason": ["seeking power", "to impress #character#", "on a dare", "for #fieldOfStudy.a# assignment", "to amuse your friends", "when bored", "out of curiosity"],
+    "atSchool": ["After an encounter with #dangerousObject#, you and #character# become #friends#. ", "#reason.capitalize#, you #interactWithMagicObject##youDoButEffect#", "#reason.capitalize#, you #interactWithMagicObject##youDoButEffect#", "#reason.capitalize#, you #interactWithMagicObject##youDoButEffect#", "#dare#", "#dare#", "#dare#", "You find #aMagicalObject# #hiddenIn# #hogwartsLocation##butYouLoseIt#. ", "You summon a patronus once, #creature.a#, #effect#.", "You and #character# #doMagic# to #doSomething##youDoButEffect#. ", "At Hogwarts, you master only one spell: '#spellName#', a #hex# to #uselessPower#. ", "You find #aMagicalObject##butYouLoseIt#. ", "After an encounter with #dangerousObject#, your #bodyPart# #isDamaged#. ", "You and #character# #lifestyleTrait#. ", "You and #character# #lifestyleTrait#. ", "You and #character# #lifestyleTrait#, #effect#. ", "Your #personalityTraitAdv# #personalityTrait# leads you to #dangerousObject##youDoButEffect#", "You and #character# #lifestyleTrait# and #lifestyleTrait#. ", "Between classes, you #lifestyleTrait# and #lifestyleTrait#. ", "You #lifestyleTrait# and #lifestyleTrait#, #effect#.", "Like most students, you #lifestyleTrait# and #lifestyleTrait#. ", "Unknown to your classmates, you secretly #lifestyleTrait#. ", "Your entire #fieldOfStudy# class is #killed#, but you escape by #trick#. "],
+    "trick": ["hiding behind a desk", "being in on the conspiracy", "missing class", "being at a Quidditch match", "using a counter-hex", "being saved by #professor#", "sneaking away", "playing dead", "crying"],
+
+    "hookupWith": ["marry", "hook up with", "drunkenly make out with", "get in an online flamewar with", "start a band with", "do tequila shots with"],
+
+    "gettingGrades": ["long hours of study", "extensive bribery", "encouragement from #professor#", "excelling at #fieldOfStudy#"],
+
+    "youLeaveHogwarts": ["Despite #gettingGrades# you drop out of Hogwarts to #postschool#. ", "#professor# catches you sneaking #toLocation# to #misbehaveWith# #character# and you are expelled.", "You graduate with #grades# and move back into your ancestral home, #apartment.a# #realEstateLocation#. "],
+
+    "maladyStart": ["doom", "dread", "gribble", "expulso", "dragon", "flobbo", "narco", "melto", "mumble", "phlargle", "fire", "ash"],
+    "maladyEnd": ["bones", "blood", "gout", "cancer", "worms", "pox", "mumps", "fever", "flu", "mange", "death"],
+    "malady": ["accute #maladyStart##maladyEnd#", "lycanthropy", "completely non-magical cancer"],
+
+    "betterPotion": ["more powerful", "better-tasting", "faster-acting", "cheaper"],
+    "fancyThing": ["a cure for #maladyStart##maladyEnd#", "#betterPotion# potion of #potionPower#", "a faster-acting #drink#", "immortality#"],
+
+    "postSchool": ["After graduation you rent #apartment.a# #realEstateLocation# and work as #magicalJob#. ", "After graduation you work at your #relative#'s #monster# #ranch#. "],
+
+    "postSchoolDeath": ["Years later, you #hookupWith# a recently-divorced #character#.", "#eventually.capitalize#, you die in an incident involving #dangerousObject#.", "#eventually.capitalize#, you die in an incident involving #dangerousObject# that #provenance#.", "#eventually.capitalize#, you and #character# die in an incident involving #dangerousObject#.", "#eventually.capitalize#, you perish from #malady#."],
+
+    "eventually": ["eventually", "many years later", "years later"],
+
+    "origin": ["#enterHogwarts#\n#atSchool##atSchool#\n#youDieAtHogwarts#", "#enterHogwarts#\n#atSchool##atSchool##youLeaveHogwarts#\n#postSchoolDeath#", "#enterHogwarts#\n#atSchool##atSchool#\n#postSchool##postSchoolDeath#"]
+}

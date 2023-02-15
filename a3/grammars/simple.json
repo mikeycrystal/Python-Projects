@@ -1,0 +1,7 @@
+{
+	"mood" : ["excited", "quiet", "sorrowful", "happy", "anxious", "eager"],
+	"color": ["red", "magenta", "silver", "cyan"],
+	"adj": ["ambidextrous", "ancient", "#mood#","#color#", "#size#"],
+	"animal": ["emu", "corgi", "boa"],
+	"origin": "#adj.a# pack of #adj# #animal.s#"
+}

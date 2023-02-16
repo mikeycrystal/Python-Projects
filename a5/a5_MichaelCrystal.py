@@ -74,6 +74,7 @@ class Student:
 		self.name = name
 		self.partner_ratings = partner_ratings
 		self.partner = None
+		
 
 
 	#------------------------------------------------------
@@ -183,10 +184,8 @@ class Student:
 	#	Then set this person as our partner, and set us as this person's partner
 
 	def make_partnership(self, new_partner):
-		if self.partner:
-			self.partner.partner = None
-		if new_partner.partner:
-			new_partner.partner.partner = None
+		self.break_partnership()
+		new_partner.break_partnership()
 		self.partner = new_partner
 		new_partner.partner = self
 
@@ -195,12 +194,13 @@ class Student:
 	Returns: None
 	"""
 	def propose_to_top_choice(self):
-		to_propose = self.partner_ratings.pop()
-		if to_propose.partner == None:
-			self.make_partnership(to_propose)
+		person = self.to_propose.pop()
+		p2 = self.all_students.get_student_by_name(person)
+		if not p2.has_partner():
+			self.make_partnership(p2)
 		else:
-			if self.get_rating_of_current_partner() < self.get_rating_of_name(to_propose):
-				self.make_partnership(to_propose)
+			if self.get_rating_of_current_partner() < self.get_rating_of_name(person):
+				self.make_partnership(p2)
 			else:
 				self.partner_ratings.pop()
 	#------------------------------------------------------
@@ -316,8 +316,8 @@ class Group:
 		# Task 7: Make naive partnerships for each student in group_a
 		#   (hint: use a for loop over an *enumerated* list of group_a)
 		# 	Make sure to break up all the partnerships first
+		self.break_all_partnerships()
 		for i, j in enumerate(self.students_a):
-			j.break_partnership()
 			j.make_partnership(self.students_b[i])
 		return None
 
@@ -356,9 +356,14 @@ class Group:
 		#	Why is propose_to a method on a Student instance, 
 		#		rather than part of this function?
 		#		It is easier to think about it as *one* student making a choice!
-
-		return None
-
+		self.break_all_partnerships()
+		self.to_propose = self.partner_ratings[:]
+		while get_unpartnered():
+			self.propose_to_top_choice()
+		
+		
+		def get_unpartnered():
+			return [student for student in self.students_a if not student.partner]
 	#-------------------------------
 	# Useful data-printing methods
 	
@@ -623,33 +628,33 @@ if __name__ == '__main__':
 	student_group.print_partnership_quality()
 
 	# # Test Task 8 and 9
-	# print("-"*40 + "\nTest 'make_gale_shapely_partnerships' \n")
+	print("-"*40 + "\nTest 'make_gale_shapely_partnerships' \n")
 	
-	# # Now try making pairs again 
-	# # ...but now with the Gale Shapeley algorithm
+	# Now try making pairs again 
+	# ...but now with the Gale Shapeley algorithm
 
-	# # Test propose_to_top_choice by manually setting the to_propose lists
-	# # (Later this is done in make_gale_shapely_partnerships)
-	# student_group.break_all_partnerships()
-	# anna = student_group.students_a[0]
-	# amelia = student_group.students_a[3]
-	# anna.to_propose = anna.partner_ratings[:]
-	# amelia.to_propose = amelia.partner_ratings[:]
+	# Test propose_to_top_choice by manually setting the to_propose lists
+	# (Later this is done in make_gale_shapely_partnerships)
+	student_group.break_all_partnerships()
+	anna = student_group.students_a[0]
+	amelia = student_group.students_a[3]
+	anna.to_propose = anna.partner_ratings[:]
+	amelia.to_propose = amelia.partner_ratings[:]
 
 
-	# # Biyu should accept Amelia, because Biyu doesn't have a partner yet
-	# amelia.propose_to_top_choice()
-	# student_group.print_student_information()
+	# Biyu should accept Amelia, because Biyu doesn't have a partner yet
+	amelia.propose_to_top_choice()
+	student_group.print_student_information()
 	
-	# # Biyu should switch to Anna, dumping Amelia
-	# anna.propose_to_top_choice()
-	# student_group.print_student_information()
+	# Biyu should switch to Anna, dumping Amelia
+	anna.propose_to_top_choice()
+	student_group.print_student_information()
 	
-	# # Make Gale-Shapeley pairings
-	# student_group.make_gale_shapely_partnerships()
+	# Make Gale-Shapeley pairings
+	student_group.make_gale_shapely_partnerships()
 	
-	# # Print out how satisfied everyone is
-	# student_group.print_partnership_quality()
+	# Print out how satisfied everyone is
+	student_group.print_partnership_quality()
 
 	# #------------------------------------------------------
 	# # Task 10: Run an experiment

@@ -356,14 +356,19 @@ class Group:
 		#	Why is propose_to a method on a Student instance, 
 		#		rather than part of this function?
 		#		It is easier to think about it as *one* student making a choice!
-		self.break_all_partnerships()
-		self.to_propose = self.partner_ratings[:]
-		while get_unpartnered():
-			self.propose_to_top_choice()
-		
-		
+
+
 		def get_unpartnered():
-			return [student for student in self.students_a if not student.partner]
+			return [s for s in self.students_a if not s.has_partner()]
+
+		self.break_all_partnerships()
+		for s in self.students_a:
+			s.to_propose = s.partner_ratings[:]
+		while get_unpartnered():
+			unpartnered = get_unpartnered()
+			for p in unpartnered:
+				p.propose_to_top_choice()
+		return None
 	#-------------------------------
 	# Useful data-printing methods
 	
@@ -481,7 +486,16 @@ def run_experiment(student_count=10, run_count=10, matchmaking_fxn="make_gale_sh
 
 
 	# TODO: your code here
-
+	for i in range(run_count):
+		g.randomize_ratings()
+		function = getattr(g, matchmaking_fxn)
+		i = time.perf_counter()
+		function()
+		j = time.perf_counter()
+		total_time += (j-i)/run_count
+		total_happiness_a += calculate_average_happiness(g.students_a)
+		total_happiness_b += calculate_average_happiness(g.students_b)
+		total_happiness += calculate_average_happiness(g.all_students)
 
 
 
@@ -564,6 +578,8 @@ if __name__ == '__main__':
 	s0.make_partnership(s3)
 	print(f"After making Jason and Riley partners:\m {s0}, {s3}")
 	assert f"{s0} {s3}" == "Jason (Riley) Riley (Jason)", "Make partnership not working"
+	assert isinstance(s3, Student), f"new_partner is not a student instance, is a {type(s3)}"           
+
 	
 	# Riley partners with Joy, breaking up with Jason
 	s3.make_partnership(s1)
@@ -657,85 +673,104 @@ if __name__ == '__main__':
 	student_group.print_partnership_quality()
 
 	# #------------------------------------------------------
-	# # Task 10: Run an experiment
-	# # How long does Gale Shapeley take to run?
-	# # How happy is everyone?
+	# Task 10: Run an experiment
+	# How long does Gale Shapeley take to run?
+	# How happy is everyone?
 
-	# print("-"*50 + "\nRunning experiments")
+	print("-"*50 + "\nRunning experiments")
 
-	# # Use this to easily print the results of any test
-	# def print_test_result(result):
-	# 	print(f"Experiment with {result['student_count']} students for {result['run_count']} runs ({result['matchmaking_fxn']})")
-	# 	print(f"\tA happiness:       {result['a']:.2f}")
-	# 	print(f"\tB happiness:       {result['b']:.2f}")
-	# 	print(f"\tAverage happiness: {result['all']:.2f}")
-	# 	print(f"\tUnfairness:        {result['unfairness']:.2f} (1 is perfectly fair)")
-	# 	print(f"\tTime per run: {result['time']:.4f} milliseconds")
+	# Use this to easily print the results of any test
+	def print_test_result(result):
+		print(f"Experiment with {result['student_count']} students for {result['run_count']} runs ({result['matchmaking_fxn']})")
+		print(f"\tA happiness:       {result['a']:.2f}")
+		print(f"\tB happiness:       {result['b']:.2f}")
+		print(f"\tAverage happiness: {result['all']:.2f}")
+		print(f"\tUnfairness:        {result['unfairness']:.2f} (1 is perfectly fair)")
+		print(f"\tTime per run: {result['time']:.4f} milliseconds")
 
-	# # Try out a few experiments by changing these values
-	# # What do you notice about increasing the number of students, or the run count?
-	# # How does fairness and satisfaction change if you use naive or GS?
-	# run_count = 100
-	# student_count = 100
-	# fxn_name = "make_gale_shapely_partnerships"
-	# fxn_name = "make_naive_partnerships"
+	# Try out a few experiments by changing these values
+	# What do you notice about increasing the number of students, or the run count?
+	# How does fairness and satisfaction change if you use naive or GS?
+	run_count = 100
+	student_count = 100
+	fxn_name = "make_gale_shapely_partnerships"
+	fxn_name = "make_naive_partnerships"
 	
-	# result = run_experiment(
-	# 	student_count=student_count, 
-	# 	run_count=run_count, 
-	# 	matchmaking_fxn=fxn_name
-	# 	)
-	# print_test_result(result)
+	result = run_experiment(
+		student_count=student_count, 
+		run_count=run_count, 
+		matchmaking_fxn=fxn_name
+		)
+	print_test_result(result)
 
 
-	# # How long does this take to run?
-	# # Adjust the range for whatever your computer can handle
-	# # or control-C to stop the experiment when you see the pattern
-	# # Notice that it gets slower PER STUDENT
+	# How long does this take to run?
+	# Adjust the range for whatever your computer can handle
+	# or control-C to stop the experiment when you see the pattern
+	# Notice that it gets slower PER STUDENT
 
-	# print("\nTest run speed")
-	# for i in range(1,30):
-	# 	run_count = 10
-	# 	student_count = 10*i 
-	# 	result = run_experiment(
-	# 		student_count=student_count, 
-	# 		run_count=run_count, 
-	# 		matchmaking_fxn="make_gale_shapely_partnerships",
+	print("\nTest run speed")
+	for i in range(1,30):
+		run_count = 10
+		student_count = 10*i 
+		result = run_experiment(
+			student_count=student_count, 
+			run_count=run_count, 
+			matchmaking_fxn="make_gale_shapely_partnerships",
 			
-	# 	)
-	# 	avg_time = result['time']
-	# 	time_per_student = avg_time/student_count
-	# 	bar = "▇"*round(avg_time*.2)
-	# 	print(f"{student_count:10}: {time_per_student:.4f} ms/student {bar}")
+		)
+		avg_time = result['time']
+		time_per_student = avg_time/student_count
+		bar = "▇"*round(avg_time*.2)
+		print(f"{student_count:10}: {time_per_student:.4f} ms/student {bar}")
 
 
 
-	# # A few asserts to verify that 
-	# # * Naive is unsatisfying but fair
-	# # * GS makes more people happy, but is unfair to group B
-	# # TOUGH QUESTION: Which one would you use in the real world?
-	# # When we assign Peer Mentors, who should be group A, profs or peer mentors?
+	# A few asserts to verify that 
+	# * Naive is unsatisfying but fair
+	# * GS makes more people happy, but is unfair to group B
+	# TOUGH QUESTION: Which one would you use in the real world?
+	# When we assign Peer Mentors, who should be group A, profs or peer mentors?
 
-	# naive_result = run_experiment(
-	# 	student_count=20, 
-	# 	run_count=100, 
-	# 	matchmaking_fxn="make_naive_partnerships"
-	# 	)
-	# print_test_result(naive_result)
+	naive_result = run_experiment(
+		student_count=20, 
+		run_count=100, 
+		matchmaking_fxn="make_naive_partnerships"
+		)
+	print_test_result(naive_result)
 	
-	# assert(math.isclose(naive_result["unfairness"], 1), "We expect GS algorithm to be biased in favor of group A")
-	# assert(math.isclose(naive_result["all"], .5, abs_tol = 0.02), "We expect an average of about .5 happiness for this size group")
+	assert(math.isclose(naive_result["unfairness"], 1), "We expect GS algorithm to be biased in favor of group A")
+	assert(math.isclose(naive_result["all"], .5, abs_tol = 0.02), "We expect an average of about .5 happiness for this size group")
 
-	# gs_result = run_experiment(
-	# 	student_count=20, 
-	# 	run_count=100, 
-	# 	matchmaking_fxn="make_gale_shapely_partnerships"
-	# 	)
-	# print_test_result(gs_result)
+	gs_result = run_experiment(
+		student_count=20, 
+		run_count=100, 
+		matchmaking_fxn="make_gale_shapely_partnerships"
+		)
+	print_test_result(gs_result)
 	
-	# assert(gs_result["a"] > gs_result["b"], "We expect GS algorithm to be biased in favor of group A")
-	# assert(math.isclose(gs_result["all"], .812, abs_tol = 0.02), "We expect an average of about .812 for this size group")
+	assert(gs_result["a"] > gs_result["b"], "We expect GS algorithm to be biased in favor of group A")
+	assert(math.isclose(gs_result["all"], .812, abs_tol = 0.02), "We expect an average of about .812 for this size group")
 
+	naive_result = run_experiment(
+        student_count=20, 
+        run_count=100, 
+        matchmaking_fxn="make_naive_partnerships"
+        )
 
+	print_test_result(naive_result)
+    
+	assert math.isclose(naive_result["unfairness"], 1, abs_tol = 0.05) , "We expect GS algorithm to be biased in favor of group A"
+	assert math.isclose(naive_result["all"], .5, abs_tol = 0.05) , "We expect an average of about .5 happiness for this size group"
 
-	# 
+	gs_result = run_experiment(
+        student_count=20, 
+        run_count=100, 
+        matchmaking_fxn="make_gale_shapely_partnerships"
+        )
+	print_test_result(gs_result)
+
+	assert s0.partner == s3, "Make sure that the partners are Student instances, not string names"
+	
+	assert gs_result["a"] > gs_result["b"], "We expect GS algorithm to be biased in favor of group A"
+	

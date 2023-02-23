@@ -89,15 +89,17 @@ def get_title(soup):
 
 	# Uncomment to explore ways to access elements in a soup object:
 	# What type is "soup"?
-	# print(type(soup))
-	# Example (uncomment to see)
-	# print("The first h3 element is", soup.h3)
-	# print(f"The first h3 element's text is '{soup.h3.text}'")
+	print(type(soup))
+	#Example (uncomment to see)
+	
+	#print("The first h3 element is", soup.title)
+	#print(f"The first h3 element's text is '{soup.h3.text}'")
 
 	# Task 0: Get the title of the page, and return it (minus " - Wikipedia")
 
-	
-	return "NO TITLE"
+	title = soup.title.text
+	final = title[0:title.find(' - Wikipedia')]
+	return final
 
 
 def get_last_edit(soup):
@@ -133,12 +135,13 @@ def get_last_edit(soup):
 	end_text = ", at"
 
 	# Example:
-	# print(f"the copyright element is: {soup.find(id='footer-info-copyright')}")
-	# print(f"the copyright element's text is: {soup.find(id='footer-info-copyright').text}")
+	print(f"the copyright element is: {soup.find(id='footer-info-copyright')}")
+	print(f"the copyright element's text is: {soup.find(id='footer-info-copyright').text}")
 
 	# Task 1: Get date of the last edit of this page (e.g. 9 November 2021)
-
-	return "NO DATE"
+	date = soup.find(id='footer-info-lastmod').text
+	final = date[date.find(start_text) + 4:date.find(end_text)]
+	return final
 	
 
 
@@ -172,8 +175,9 @@ def get_wordcount(soup):
 
 	# Task 2: Get wordcount of this page
 
-
-	return 0
+	words = soup.text
+	wc = words.split()
+	return len(wc)
 
 
 
@@ -212,7 +216,12 @@ def get_all_links(soup):
 	#   (the url of a link) values for all "a" tags to 
 	#   get a list of all urls linked to in this page
 
-	return []
+	all_a = soup.find_all('a')
+	all_tag = []
+	for tag in all_a:
+		if "href" in tag.attrs and tag.attrs['href'] != '':
+			all_tag.append(tag.attrs['href'])
+	return all_tag
 
 def get_all_wiki_link_ids(soup):
 	"""
@@ -242,8 +251,12 @@ def get_all_wiki_link_ids(soup):
 	"""
 
 	# Task 4: get all of the wiki article ids linked from this page
-
-	return []
+	links  = get_all_links(soup)
+	link_arr =[]
+	for id in links:
+		if id.startswith('/wiki/') and ':' not in id and '#' not in id:
+			link_arr.append(id[6:])
+	return link_arr
 
 def get_shortest_page(page_directory):
 	"""
@@ -261,7 +274,11 @@ def get_shortest_page(page_directory):
 	# Assuming no wiki articles have more than a million words, any article will beat this
 	winning_count = 999999 
 	winner = None
-	
+	for page in page_directory.values():
+		count = page.wordcount
+		if count < winning_count:
+			winner = page
+			winning_count = count
 	return winner
 
 def get_oldest_page(page_directory):
@@ -283,7 +300,11 @@ def get_oldest_page(page_directory):
 	# The timestamp for right now, any article is older than this
 	winning_timestamp = datetime.today() 
 	winner = None
-	
+	for page in page_directory.values():
+		timestamp = datetime.strptime(page.last_edit, '%d %B %Y')
+		if timestamp < winning_timestamp:
+			winner = page
+			winning_timestamp = timestamp
 	return winner
 
 
@@ -330,6 +351,17 @@ class WikiPage:
 		#  		and last_edit as properties on this instance
 		# * Calculate all the wiki link ids using get_all_wiki_link_ids 
 		#		and store it as a wiki_links property on this instance
+		
+		self.html = load_url_politely(self.url)
+		self.soup = BeautifulSoup(self.html)
+		self.title = get_title(self.soup)
+		self.wordcount = get_wordcount(self.soup)
+		self.page_directory = page_directory
+		self.page_id = page_id
+		self.last_edit = get_last_edit(self.soup)
+		self.wiki_links = get_all_wiki_link_ids(self.soup)
+		page_directory[page_id] = self
+
 
 
 	def get_interesting_links(self):
@@ -362,7 +394,7 @@ class WikiPage:
 		
 	
 
-		# Task 6: load all links from this
+		# Task 8: load all links from this
 		# Get all the "interesting links" from this page (see above)
 		# 	If randomize_links is true, use "shuffle" to randomly re-order them
 		# 	https://www.w3schools.com/python/ref_random_shuffle.asp
@@ -382,10 +414,15 @@ class WikiPage:
 		#			* So we have recursion_count to tell us when to stop
 		#			* This bit is fussy, and you can easily get in an endless loop
 		#			
-
-
-
-					
+		w = self.get_interesting_links()
+		if randomize_links == True:
+			random.shuffle(w)
+		otherlinks = w[0:links_per_article]
+		for ID in otherlinks:
+			if ID not in self.page_directory:
+				wp = WikiPage(self.page_directory, ID)
+				if recursion_count > 0:
+					wp.load_links(recursion_count = recursion_count - 1, links_per_article=links_per_article )		
 		return None
 
 
@@ -558,16 +595,16 @@ if __name__ == "__main__":
 
 	# How many times was each link referenced? Make a counter! 
 	# https://realpython.com/python-counter/
-	# counts = Counter(wiki_ids)
+	counts = Counter(wiki_ids)
 
 	# Just print all the counts
-	# pprint(counts)
+	pprint(counts)
 
 	# Calculate how many articles are referenced 1, 2, 3, 4... times in this article
 	# What is the most common outgoing link from the Cat article?
-	# for i in range(1,7):
-	# 	wiki_ids_with_count = [id for (id,count) in counts.items() if count == i]
-	# 	print(f"Seen {i} times: {len(wiki_ids_with_count)} total",  wiki_ids_with_count[0:5])
+	for i in range(1,7):
+		wiki_ids_with_count = [id for (id,count) in counts.items() if count == i]
+		print(f"Seen {i} times: {len(wiki_ids_with_count)} total",  wiki_ids_with_count[0:5])
 
 	assert "Purring" in wiki_ids, "Should have found a link to the wiki page for 'Purring'"
 	assert "Kneading_(cats)" in wiki_ids, "Should have found a link to the wiki page for 'Kneading_(cats)'"
@@ -584,68 +621,68 @@ if __name__ == "__main__":
 	# 	e.g "page_directory['Cat']", page_directory['Montero_(Call_Me_by_Your_Name)']"
 	page_directory = {}
 
-	# test_page = WikiPage(page_directory, "Evanston,_Illinois")
+	test_page = WikiPage(page_directory, "Evanston,_Illinois")
 
 	# # Test Task 5
 
-	# assert test_page.title == "Evanston, Illinois"
-	# assert isinstance(test_page.soup, BeautifulSoup), "Did you save the BeautifulSoup object?"
-	# assert isinstance(test_page.wordcount, int), f"Wordcound should be an integer, was {test_page.wordcount}"
-	# assert isinstance(test_page.last_edit, str), f"Last edit should be a date (str), was {test_page.last_edit}"
-	# assert "Northwestern_University" in test_page.wiki_links, "Northwestern should be one of the wiki links of the article on Evanston"
+	assert test_page.title == "Evanston, Illinois"
+	assert isinstance(test_page.soup, BeautifulSoup), "Did you save the BeautifulSoup object?"
+	assert isinstance(test_page.wordcount, int), f"Wordcound should be an integer, was {test_page.wordcount}"
+	assert isinstance(test_page.last_edit, str), f"Last edit should be a date (str), was {test_page.last_edit}"
+	assert "Northwestern_University" in test_page.wiki_links, "Northwestern should be one of the wiki links of the article on Evanston"
 	
-	# assert isinstance(test_page.page_directory, dict), "Did you store page_directory as a property on the WikiPage instance?" 
-	# assert page_directory["Evanston,_Illinois"] == test_page, "Did you store the WikiPage instance in the directory so we can access it later?" 
+	assert isinstance(test_page.page_directory, dict), "Did you store page_directory as a property on the WikiPage instance?" 
+	assert page_directory["Evanston,_Illinois"] == test_page, "Did you store the WikiPage instance in the directory so we can access it later?" 
 
 	# # Load several pages
-	# for wiki_id in test_interesting_articles:
-	# 	new_page = WikiPage(page_directory, wiki_id)
+	for wiki_id in test_interesting_articles:
+		new_page = WikiPage(page_directory, wiki_id)
 
 	# # Test Task 6
 
-	# print("-"*50 +  "\nSHORTEST AND OLDEST PAGES:")
+	print("-"*50 +  "\nSHORTEST AND OLDEST PAGES:")
 	
 	
-	# # Printing out each page and its length 
-	# # (may be useful to both debug *and* program Task 6!)
-	# # No asserts, because these might change, but hopefully this makes the right answer obvious
-	# for page_id in page_directory:
-	# 	page = page_directory[page_id]
-	# 	print(f"\t{page_id:30} {page.last_edit:20} {page.wordcount} words") 
+	# Printing out each page and its length 
+	# (may be useful to both debug *and* program Task 6!)
+	# No asserts, because these might change, but hopefully this makes the right answer obvious
+	for page_id in page_directory:
+		page = page_directory[page_id]
+		print(f"\t{page_id:30} {page.last_edit:20} {page.wordcount} words") 
 	
-	# shortest = get_shortest_page(page_directory)
-	# oldest = get_oldest_page(page_directory)
-	# print("Shortest article: ", shortest.title, shortest.wordcount)
-	# print("Oldest article: ", oldest.title, oldest.last_edit)
+	shortest = get_shortest_page(page_directory)
+	oldest = get_oldest_page(page_directory)
+	print("Shortest article: ", shortest.title, shortest.wordcount)
+	print("Oldest article: ", oldest.title, oldest.last_edit)
 
 
 	# ------------------------------------------------------------------
-	# Test Task 7
-	# Load links *recursively*
+	#Test Task 7
+	#Load links *recursively*
 
-	# page_directory = {}
-	# cat_page = WikiPage(page_directory, "Cat")
+	page_directory = {}
+	cat_page = WikiPage(page_directory, "Cat")
 
-	# # Try without recursion
-	# print("\n-- Load NON-RECURSIVELY --")
-	# cat_page.load_links(links_per_article=5, recursion_count=0)
-	# print("All loaded pages ", page_directory.keys())
+	# Try without recursion
+	print("\n-- Load NON-RECURSIVELY --")
+	cat_page.load_links(links_per_article=5, recursion_count=0)
+	print("All loaded pages ", page_directory.keys())
 	
-	# # Show a tree visualization of all links accessible from this page 
-	# # (Wikipedia isn't actually a tree, there are also loops, but we don't visualize those here)
-	# print("\n-- Load RECURSIVELY --")
-	# page_directory = {}
-	# cat_page = WikiPage(page_directory, "Cat")
+	# Show a tree visualization of all links accessible from this page 
+	# (Wikipedia isn't actually a tree, there are also loops, but we don't visualize those here)
+	print("\n-- Load RECURSIVELY --")
+	page_directory = {}
+	cat_page = WikiPage(page_directory, "Cat")
 
-	# # cat_page.display_tree()
-	# # assert "Conservation_status" in page_directory, "If it loaded the first 5 links from Cat, 'Conservation_status' should be in the directory"
+	# cat_page.display_tree()
+	# assert "Conservation_status" in page_directory, "If it loaded the first 5 links from Cat, 'Conservation_status' should be in the directory"
 	
-	# # Try with more recursion, but fewer links:
-	# # this will get further away from the original article
-	# cat_page.load_links(links_per_article=2, recursion_count=3)
-	# # cat_page.display_tree()
-	# print("All loaded pages ", sorted(page_directory.keys()))
-	# # assert "Felidae" in page_directory, "If it loaded the links 3 links deep from Cat, 'Felidae' should be in the directory"
+	# Try with more recursion, but fewer links:
+	# this will get further away from the original article
+	cat_page.load_links(links_per_article=2, recursion_count=3)
+	# cat_page.display_tree()
+	print("All loaded pages ", sorted(page_directory.keys()))
+	# assert "Felidae" in page_directory, "If it loaded the links 3 links deep from Cat, 'Felidae' should be in the directory"
 	
 
 
@@ -663,32 +700,32 @@ if __name__ == "__main__":
 	# Try loading different pages, and find unexpected paths between topics
 
 	# Make sure we have some cat pages loaded
-	# cat_page = WikiPage(page_directory, "Cat")
-	# cat_page.load_links(links_per_article=4, recursion_count=2)
+	cat_page = WikiPage(page_directory, "Cat")
+	cat_page.load_links(links_per_article=4, recursion_count=2)
 
-	# # Lets load two more sets of pages so we have more pages to play with
-	# evanston_page = WikiPage(page_directory, "Evanston,_Illinois")
-	# evanston_page.load_links(links_per_article=4, recursion_count=2)
+	# Lets load two more sets of pages so we have more pages to play with
+	evanston_page = WikiPage(page_directory, "Evanston,_Illinois")
+	evanston_page.load_links(links_per_article=4, recursion_count=2)
 	
-	# cs_page = WikiPage(page_directory, "Computer_science")
-	# cs_page.load_links(links_per_article=4, recursion_count=2)
-	# cs_page.display_tree()
+	cs_page = WikiPage(page_directory, "Computer_science")
+	cs_page.load_links(links_per_article=4, recursion_count=2)
+	cs_page.display_tree()
 
-	# print("Total pages loaded", ", ".join(page_directory.keys()))
+	print("Total pages loaded", ", ".join(page_directory.keys()))
 
 	
-	# # What other paths can we find with only 80 or so pages loaded?
-	# # Some of these have no path found, but can you find a path if you load more pages?
-	# # What other connections can you find?
+	# What other paths can we find with only 80 or so pages loaded?
+	# Some of these have no path found, but can you find a path if you load more pages?
+	# What other connections can you find?
 	
-	# print(f"Path found from Cat to Evanston,_Illinois", page_directory["Cat"].find_path([], "Evanston,_Illinois"))
-	# print(f"Path found from Cat to Dinosaur", page_directory["Cat"].find_path([], "Dinosaur"))
-	# print(f"Path found from Cat to Computer_science", page_directory["Cat"].find_path([], "Computer_science"))
-	# print(f"Path found from Evanston,_Illinois to Cat", page_directory["Evanston,_Illinois"].find_path([], "Cat"))
-	# print(f"Path found from Cat to Arabic", page_directory["Cat"].find_path([], "Arabic"))
-	# print(f"Path found from Computer_science to Half-Life_(series)", page_directory["Computer_science"].find_path([], "Half-Life_(series)"))
-	# print(f"Path found from Computer_science to Chicago", page_directory["Computer_science"].find_path([], "Chicago"))
-	# print(f"Path found from Alphabet to Automation", page_directory["Alphabet"].find_path([], "Automation"))
+	print(f"Path found from Cat to Evanston,_Illinois", page_directory["Cat"].find_path([], "Evanston,_Illinois"))
+	print(f"Path found from Cat to Dinosaur", page_directory["Cat"].find_path([], "Dinosaur"))
+	print(f"Path found from Cat to Computer_science", page_directory["Cat"].find_path([], "Computer_science"))
+	print(f"Path found from Evanston,_Illinois to Cat", page_directory["Evanston,_Illinois"].find_path([], "Cat"))
+	print(f"Path found from Cat to Arabic", page_directory["Cat"].find_path([], "Arabic"))
+	print(f"Path found from Computer_science to Half-Life_(series)", page_directory["Computer_science"].find_path([], "Half-Life_(series)"))
+	print(f"Path found from Computer_science to Chicago", page_directory["Computer_science"].find_path([], "Chicago"))
+	print(f"Path found from Alphabet to Automation", page_directory["Alphabet"].find_path([], "Automation"))
 
 
 	

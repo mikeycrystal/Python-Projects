@@ -74,7 +74,10 @@ def load_color_dataset(path):
 	#  Use a list comprehension to return it as 
 	#  a list of Color instances instead
 	
-	return []
+	with open(path, encoding='utf-8') as json_file:
+		data = json.load(json_file)
+		c = data['colors']
+	return [Color(color) for color in c]
 
 #----------------------------------------------------------------------------------
 # Query functions for finding colors
@@ -100,7 +103,16 @@ def get_colors_by_word(all_colors, word):
 	# (read on sorting with a "key function")
 	# https://www.programiz.com/python-programming/methods/list/sort
 
-	return None
+	def key(color):
+		length = len(color.name)
+		return length
+
+	c_list = []
+	c_list = [color for color in all_colors if word in color.name]
+	if c_list == []:
+		return None
+	return sorted(c_list, key=key)
+
 
 def get_closest_named_colors(all_colors, query_rgb, count=10):
 
@@ -125,8 +137,12 @@ def get_closest_named_colors(all_colors, query_rgb, count=10):
 	Returns:
 		list of Color: the top N colors with the smallest distance to the color rgb
 	"""
+	def key(color):
+		dist = color.get_distance_to(query_rgb)
+		return dist
 
-	return []
+
+	return sorted(all_colors, key=key)[0:count]
 
 #---------------------------------------------------------------------------------
 # Drawing utility functions
@@ -154,8 +170,11 @@ def draw_scatterplot(axes, colors, marker="o"):
 	# need to be [0-1] instead if [0-255]
 	# Use a list comprehension to make an "rgb_1" copy of each color, 
 	# with its values divided by 255
-
-	return None
+	for c in colors:
+		r = (c[0]/255)
+		g = (c[1]/255)
+		b = (c[2]/255)
+		axes.scatter(c[0], c[1], c[2], marker=marker, color = (r, g, b))
 
 
 def draw_colors(image, rect_size=(100, 200), rgb_colors=[], labels=None, font=None):
@@ -193,7 +212,12 @@ def draw_colors(image, rect_size=(100, 200), rgb_colors=[], labels=None, font=No
 	im_draw = ImageDraw.Draw(image)  
 
 	# -- Your code here --
-			
+	for i, c in enumerate(rgb_colors):
+		width = rect_size[0]
+		height = rect_size[1]
+		im_draw.rectangle([(0, i*height), (width, (i*height + height))], fill=c, outline='white')
+		if labels is not None:
+			im_draw.text((0,i*height), labels[i], font=font)
 	return None
 
 def sort_cats(all_cats):
@@ -209,7 +233,11 @@ def sort_cats(all_cats):
 	# Use the other two sorting tasks as a template!
 	# Edge case: If a CatPicture does not have the attribute detected_cats, 
 	#	consider it to have 0 cats
-
+	def key(p):
+		if not hasattr(p, "detected_cats"):
+			return 0
+		return len(p.detected_cats)
+	all_cats = sorted(all_cats, key=key, reverse=True)
 	return all_cats[:]
 
 
@@ -257,8 +285,11 @@ class Color:
 		# 	(the python syntax for raising something to a power is x**2) 
 		# and return the square root 
 		# 	"math.sqrt")
-
-		return 0
+		r = self.rgb[0] - rgb[0]
+		g = self.rgb[1] - rgb[1]
+		b = self.rgb[2] - rgb[2]
+		squares = math.sqrt(r**2+g**2+b**2)
+		return squares
 
 
 class Cat_Picture:
@@ -289,7 +320,11 @@ class Cat_Picture:
 		# https://realpython.com/image-processing-with-the-python-pillow-library/
 		# Store attributes width, height, full_image, aspect_ratio, and file_path
 		# 	for this instance
-		
+		self.file_path = file_path
+		self.full_image = Image.open(self.file_path).convert('RGB')
+		self.width = self.full_image.size[0]
+		self.height = self.full_image.size[1]
+		self.aspect_ratio = self.width/self.height
 		# -- Your code here --
 	
 		self.thumbnail = self.create_thumbnail(200)
@@ -317,11 +352,15 @@ class Cat_Picture:
 		# so first make a *copy* 
 		# https://pillow.readthedocs.io/en/stable/reference/Image.html#PIL.Image.Image.copy
 		
-		thumbnail_size = (100,100)
-		
 		# -- Your code here --
+		t_width = round(thumbnail_base * math.sqrt(self.aspect_ratio))
+		t_height = round(thumbnail_base / math.sqrt(self.aspect_ratio))
+
+		thumbnail_size = (t_width, t_height)
+		new = self.full_image.copy()
+		new.thumbnail(thumbnail_size, resampling_technique)
 	
-		return None
+		return new
 
 	def set_palette(self, named_colors,cluster_count=7):
 		"""
@@ -347,7 +386,9 @@ class Cat_Picture:
 		pixels = self.get_pixels()
 
 		# -- Your code here --
-
+		c_list = calculate_clusters(pixels, cluster_count)
+		for c in c_list:
+			self.palette.append(get_closest_named_colors(named_colors, c)[0])
 		return None
 
 
@@ -407,6 +448,13 @@ class Cat_Picture:
 		copy = self.full_image.copy()
 	
 		# -- Your code here --
+		if not hasattr(self, "detected_cats"):
+			self.detect_cats()
+
+		pic = ImageDraw.Draw(copy)
+
+		for (x, y, width, height) in self.detected_cats:
+			pic.rectangle([(x,y), (x+width, y+height)], outline=(255,255,255), width = 10)
 
 		return copy
 
@@ -495,355 +543,355 @@ if __name__ == "__main__":
 	# Test Task 2
 	# What color is Northwestern purple, really?
 
-	# #401f68 is the color taken from northwestern.edu's background
-	# so it must be the official Northwestern purple
-	# nu_purple_rgb = hex_to_tuple("#401f68") 
-	# nu_many_purples = get_closest_named_colors(xkcd_colors, nu_purple_rgb, 12)
-	# print("\nNU's purple is", color_list_to_string(nu_many_purples))
+	#401f68 is the color taken from northwestern.edu's background
+	#so it must be the official Northwestern purple
+	nu_purple_rgb = hex_to_tuple("#401f68") 
+	nu_many_purples = get_closest_named_colors(xkcd_colors, nu_purple_rgb, 12)
+	print("\nNU's purple is", color_list_to_string(nu_many_purples))
 
-	# assert nu_many_purples[0].name == "royal purple", f"Royal purple should be the closest, you had {nu_many_purples[0]}"
-	# assert nu_many_purples[9].name == "grape", f"Grape should be the 9th, you had {nu_many_purples[9]}"
-	# assert len(nu_many_purples) == 12, f"Make sure you find the right number of colors"
-
-
-	# # How far off is the Northwestern purple from "royal purple"?
-	# print(f"\nTesting distance to {nu_purple_rgb}: ")
-	# for color in nu_many_purples:
-	# 	distance = color.get_distance_to(nu_purple_rgb)
-	# 	print(f"\t{color} distance to {nu_purple_rgb}: {distance:.2f}")
-
-	# royal = nu_many_purples[0]
-	# royal_distance = royal.get_distance_to(nu_purple_rgb)
-	# assert math.isclose(royal_distance, 33.44, rel_tol=.1), f"\t{royal} distance to {nu_purple_rgb}: {royal_distance:.2f}, expected 33.44"
-
-	# # #===============================================================================
-	# # # DRAWING AND GRAPHS
-
-	# # print("\n" + "-"*80 + "\nDrawing colors")
-
-	# # # -- MATPLOTLIB --
-	# # # Use Matplotlib to make a 3D scatter graph 
-	# # # Matplotlib is a great way to show interactive graphs with Python
-	# # # (** though you need to close it manually when you are done **)
-
-	# # # Remember that RGB colors are a point in 3D space
-	# # # So we can draw them in a 3D graph
-	# # # **Note: this can take a minute to display**
+	assert nu_many_purples[0].name == "royal purple", f"Royal purple should be the closest, you had {nu_many_purples[0]}"
+	assert nu_many_purples[9].name == "grape", f"Grape should be the 9th, you had {nu_many_purples[9]}"
+	assert len(nu_many_purples) == 12, f"Make sure you find the right number of colors"
 
 
-	# # fig = plt.figure()
-	# # axes = fig.add_subplot(projection='3d')
+	# How far off is the Northwestern purple from "royal purple"?
+	print(f"\nTesting distance to {nu_purple_rgb}: ")
+	for color in nu_many_purples:
+		distance = color.get_distance_to(nu_purple_rgb)
+		print(f"\t{color} distance to {nu_purple_rgb}: {distance:.2f}")
 
-	# # # Task 
-	# # # Try turning these on and off to see different colors
-	# # draw_scatterplot(axes, [c.rgb for c in aquas], marker="^")
-	# # draw_scatterplot(axes, [c.rgb for c in blues], marker="*")
-	# # draw_scatterplot(axes, [c.rgb for c in violets], marker="o")
+	royal = nu_many_purples[0]
+	royal_distance = royal.get_distance_to(nu_purple_rgb)
+	assert math.isclose(royal_distance, 33.44, rel_tol=.1), f"\t{royal} distance to {nu_purple_rgb}: {royal_distance:.2f}, expected 33.44"
 
-	# # # All colors
-	# # # draw_scatterplot(axes, [c.rgb for c in xkcd_colors], marker="s")
-	# # axes.set_xlabel('red')
-	# # axes.set_ylabel('green')
-	# # axes.set_zlabel('blue')	
-	# # # plt.show()
+	# #===============================================================================
+	# # DRAWING AND GRAPHS
+
+	print("\n" + "-"*80 + "\nDrawing colors")
+
+	# -- MATPLOTLIB --
+	# Use Matplotlib to make a 3D scatter graph 
+	# Matplotlib is a great way to show interactive graphs with Python
+	# (** though you need to close it manually when you are done **)
+
+	# Remember that RGB colors are a point in 3D space
+	# So we can draw them in a 3D graph
+	# **Note: this can take a minute to display**
 
 
-	# # # -- PIL DRAWING --
-	# # # We will be using the Python image library PIL/Pillow
+	fig = plt.figure()
+	axes = fig.add_subplot(projection='3d')
 
-	# # # Read this article first!
-	# # # https://realpython.com/image-processing-with-the-python-pillow-library/
+	# Task 
+	# Try turning these on and off to see different colors
+	draw_scatterplot(axes, [c.rgb for c in aquas], marker="^")
+	draw_scatterplot(axes, [c.rgb for c in blues], marker="*")
+	draw_scatterplot(axes, [c.rgb for c in violets], marker="o")
 
-	# # # If we want to see this color we can *draw it into an image*
-	# # # ** Notice ** PIL often wants data as a *tuple* 
-	# # #  (e.g. points and colors and dimensions)
+	# All colors
+	# draw_scatterplot(axes, [c.rgb for c in xkcd_colors], marker="s")
+	axes.set_xlabel('red')
+	axes.set_ylabel('green')
+	axes.set_zlabel('blue')	
+	# plt.show()
 
-	# # # Create the image first
-	# # image_dimensions = (300, 200)
-	# # im = Image.new(mode="RGB", size=image_dimensions)
 
-	# # # Create a drawing tool
-	# # im_draw = ImageDraw.Draw(im)  
+	# -- PIL DRAWING --
+	# We will be using the Python image library PIL/Pillow
 
-	# # # Use the drawing tool to draw a rectangle 
-	# # #   using a list of its top-left/bottom-right corners
-	# # #	and an RGB tuple for the color
-	# # # In graphics, its *very* useful to diagram on paper or whiteboard!
-	# # rect_corners = [(0,0), (150, 90)]
-	# # im_draw.rectangle(rect_corners, fill=nu_purple_rgb)
+	# Read this article first!
+	# https://realpython.com/image-processing-with-the-python-pillow-library/
 
-	# # # This displays the image
-	# # # You have to manually close it, so comment these out when you don't need them
-	# # # im.show()
+	# If we want to see this color we can *draw it into an image*
+	# ** Notice ** PIL often wants data as a *tuple* 
+	#  (e.g. points and colors and dimensions)
 
-	# # #---------------------------------------------
-	# # # *** More drawing practice ***
+	# Create the image first
+	image_dimensions = (300, 200)
+	im = Image.new(mode="RGB", size=image_dimensions)
+
+	# Create a drawing tool
+	im_draw = ImageDraw.Draw(im)  
+
+	# Use the drawing tool to draw a rectangle 
+	#   using a list of its top-left/bottom-right corners
+	#	and an RGB tuple for the color
+	# In graphics, its *very* useful to diagram on paper or whiteboard!
+	rect_corners = [(0,0), (150, 90)]
+	im_draw.rectangle(rect_corners, fill=nu_purple_rgb)
+
+	# This displays the image
+	# You have to manually close it, so comment these out when you don't need them
+	# im.show()
+
+	#---------------------------------------------
+	# *** More drawing practice ***
 	
-	# # # Practice drawing rectangles and text until you understand how to draw them
-	# # # in different colors and positions
-	# # # some_color = (230, 5, 255)
-	# # # im_draw.rectangle([(100,100), (200, 200)], fill=some_color)
+	# Practice drawing rectangles and text until you understand how to draw them
+	# in different colors and positions
+	some_color = (230, 5, 255)
+	im_draw.rectangle([(100,100), (200, 200)], fill=some_color)
 
-	# # # Load a font so that we can add text
-	# font = ImageFont.truetype(font="FredokaOne-Regular.ttf", size=18)
+	# # Load a font so that we can add text
+	font = ImageFont.truetype(font="FredokaOne-Regular.ttf", size=18)
 
-	# # # Add text with a black outline
-	# # im_draw.text((0, 0), "Go Wildcats!", font=font, 
-	# # 	fill=(155, 55, 255), stroke_fill=(0,0,0),stroke_width=2)
+	# # Add text with a black outline
+	im_draw.text((0, 0), "Go Wildcats!", font=font, 
+	 	fill=(155, 55, 255), stroke_fill=(0,0,0),stroke_width=2)
 	
-	# # # Show the image
-	# # # im.show()
+	# # Show the image
+	im.show()
 
-	# # # We can sample colors from this test image too
-	# # test_pixel_color = im.getpixel((0, 0))
-	# # print(f"original color: {nu_purple_rgb}")
-	# # print(f"color of the test rectangle {test_pixel_color}")
+	# # We can sample colors from this test image too
+	test_pixel_color = im.getpixel((0, 0))
+	print(f"original color: {nu_purple_rgb}")
+	print(f"color of the test rectangle {test_pixel_color}")
 
-	# # # Test Task 5
-	# # # Implement draw_colors function to draw a column of rectangles or text
-	# # # We can use this to visualize data later
+	# # Test Task 5
+	# # Implement draw_colors function to draw a column of rectangles or text
+	# # We can use this to visualize data later
 
-	# # colors = [(255,0,0), (0,255,0), (0,0,255)]
-	# # labels = ["red", "green", "blue"]
+	colors = [(255,0,0), (0,255,0), (0,0,255)]
+	labels = ["red", "green", "blue"]
 
-	# # # No labels just rectangles
-	# # draw_colors(im, rect_size=(100, 30), rgb_colors=colors)
-	# # # No rectangles just labels
-	# # draw_colors(im, rect_size=(100, 30), rgb_colors=colors, labels=labels, font=font)
-	# # # im.show()
+	# # No labels just rectangles
+	draw_colors(im, rect_size=(100, 30), rgb_colors=colors)
+	# # No rectangles just labels
+	draw_colors(im, rect_size=(100, 30), rgb_colors=colors, labels=labels, font=font)
+	im.show()
 
-	# # # You should see three rectangles labeled "red" "green" and "blue"
-	# # # We can sample the image inside the rectangles to see if they are the right color
-	# # assert im.getpixel((50,2)) == (255,0,0), "Is the top row red?"
-	# # assert im.getpixel((50,32)) == (0,255,0), "Is the middle row green?"
-	# # assert im.getpixel((50,62)) == (0,0,255), "Is the bottom row blue?"
+	# # You should see three rectangles labeled "red" "green" and "blue"
+	# # We can sample the image inside the rectangles to see if they are the right color
+	assert im.getpixel((50,2)) == (255,0,0), "Is the top row red?"
+	assert im.getpixel((50,32)) == (0,255,0), "Is the middle row green?"
+	assert im.getpixel((50,62)) == (0,0,255), "Is the bottom row blue?"
 
-	# # #===============================================================================
-	# # # Cat Pictures
+	# #===============================================================================
+	# # Cat Pictures
 
-	# # print("\n" + "-"*80 + "\nCat Pictures")
+	print("\n" + "-"*80 + "\nCat Pictures")
 
-	# # # Images!
-	# # # Let's load an image for practice
+	# # Images!
+	# # Let's load an image for practice
 	
-	# # cat_path = os.path.join("images", "cat0.png")
+	cat_path = os.path.join("images", "cat0.png")
 	
-	# # with Image.open(cat_path) as im:
+	with Image.open(cat_path) as im:
 
-	# # 	# We want to work with this image in RGB mode, so we convert it
-	# # 	im = im.convert('RGB')
+	# 	# We want to work with this image in RGB mode, so we convert it
+		im = im.convert('RGB')
 
-	# # 	print(f"\nLoaded image: {cat_path}")
-	# # 	print(f"\ttype: {type(im)}")
-	# # 	print(f"\tsize:{im.size[0]}x{im.size[1]} pixels")
-	# # 	print(f"\tmode:{im.mode}")
+	print(f"\nLoaded image: {cat_path}")
+	print(f"\ttype: {type(im)}")
+	print(f"\tsize:{im.size[0]}x{im.size[1]} pixels")
+	# 	print(f"\tmode:{im.mode}")
 
-	# # 	# PIP also has filters
-	# # 	# Try turning these on and off
-	# # 	# Blur
-	# # 	# im = im.filter(ImageFilter.GaussianBlur(20)).show()
-	# # 	# Convert to gray and find edges
-	# # 	# im = im.convert("L").filter(ImageFilter.FIND_EDGES)
+	# 	# PIP also has filters
+	# 	# Try turning these on and off
+	# 	# Blur
+	#im = im.filter(ImageFilter.GaussianBlur(20)).show()
+	# 	# Convert to gray and find edges
+	im = im.convert("L").filter(ImageFilter.FIND_EDGES)
 
-	# # 	# "show" is a method that opens a new window to show the image
-	# # 	# We won't see the image UNTIL this command is called
-	# # 	# 	Note that all the things we have done to this image
-	# # 	#	up to this point are visible, but not the things we do afterwards
-	# # 	#	Try playing the blur filter above and below the "show command"
+	# 	# "show" is a method that opens a new window to show the image
+	# 	# We won't see the image UNTIL this command is called
+	# 	# 	Note that all the things we have done to this image
+	# 	#	up to this point are visible, but not the things we do afterwards
+	# 	#	Try playing the blur filter above and below the "show command"
 		
-	# # 	# You also need to manually close the image window.
-	# # 	# That can be annoying so comment out
-	# # 	# 	any "show" commands you aren't using!
+	# 	# You also need to manually close the image window.
+	# 	# That can be annoying so comment out
+	# 	# 	any "show" commands you aren't using!
 
-	# # 	# im.show()
+	im.show()
 
-	# # 	# Try opening a few other cat images by changing the file path above
-	# # 	# Can you find a large or small one?
+	# 	# Try opening a few other cat images by changing the file path above
+	# 	# Can you find a large or small one?
 	
-	# # # Test the CatPicture class
-	# # # Test Task 6 and 7
-	# cat_path = os.path.join("images", "cat0.png")
+	# # Test the CatPicture class
+	# # Test Task 6 and 7
+	cat_path = os.path.join("images", "cat0.png")
 	
-	# # # Test with a very wide cat (turn off for asserts)
-	# # # cat_path = os.path.join("images", "cat67.png")
+	# # Test with a very wide cat (turn off for asserts)
+	cat_path = os.path.join("images", "cat67.png")
 	
-	# cat_picture = Cat_Picture(cat_path)
-	# # cat_picture.print_data()
+	cat_picture = Cat_Picture(cat_path)
+	cat_picture.print_data()
 
-	# # # Show this cat
-	# # # cat_picture.full_image.show()
+	# # Show this cat
+	cat_picture.full_image.show()
 	
-	# # # Check the height, width, and aspect ratio
-	# # # (for cat0, it will be different numbers for the others)
-	# # assert cat_picture.width == 600 
-	# # assert cat_picture.height == 447 
+	# # Check the height, width, and aspect ratio
+	# # (for cat0, it will be different numbers for the others)
+	assert cat_picture.width == 600 
+	assert cat_picture.height == 447 
 
-	# # assert math.isclose(cat_picture.aspect_ratio, 1.34, abs_tol=.02)
+	assert math.isclose(cat_picture.aspect_ratio, 1.34, abs_tol=.02)
 
-	# # thumbnail_ratio = cat_picture.thumbnail.size[0]/cat_picture.thumbnail.size[1]
-	# # print("Thumbnail aspect:" ,thumbnail_ratio)
+	thumbnail_ratio = cat_picture.thumbnail.size[0]/cat_picture.thumbnail.size[1]
+	print("Thumbnail aspect:" ,thumbnail_ratio)
 
-	# # # We should still have the same aspect ratio for a thumbnail and full size
-	# # # Make sure the images look the same, but one is *smaller*
-	# # # cat_picture.full_image.show()
-	# # # cat_picture.thumbnail.show()
-	# # print("Thumbnail pixel count = ", cat_picture.thumbnail.size[0]*cat_picture.thumbnail.size[1])
-	# # print("Full-size pixel count = ", cat_picture.full_image.size[0]*cat_picture.full_image.size[1])
-	# # assert math.isclose(cat_picture.aspect_ratio, thumbnail_ratio, abs_tol=.02)
-	# # assert cat_picture.full_image.size[0] > cat_picture.thumbnail.size[0], "Make sure you are not replacing the original cat picture with the thumbnail, but are making a copy"
+	# # We should still have the same aspect ratio for a thumbnail and full size
+	# # Make sure the images look the same, but one is *smaller*
+	cat_picture.full_image.show()
+	cat_picture.thumbnail.show()
+	print("Thumbnail pixel count = ", cat_picture.thumbnail.size[0]*cat_picture.thumbnail.size[1])
+	print("Full-size pixel count = ", cat_picture.full_image.size[0]*cat_picture.full_image.size[1])
+	assert math.isclose(cat_picture.aspect_ratio, thumbnail_ratio, abs_tol=.02)
+	assert cat_picture.full_image.size[0] > cat_picture.thumbnail.size[0], "Make sure you are not replacing the original cat picture with the thumbnail, but are making a copy"
 	
-	# # # Another cat picture, should have *different* data
-	# # cat_path2 = os.path.join("images", "cat2.png")
-	# # cat_picture2 = Cat_Picture(cat_path2)
-	# # cat_picture2.print_data()
-	# # # cat_picture2.thumbnail.show()
-	# # assert cat_picture.full_image.size[0] != cat_picture2.full_image.size[0], "Make sure you are loading the path passed in as a parameter"
-	
-	
-	# # # Now we can use this to visualize color data!
-	# # # Get the pixel data from the thumbnail and turn it into a list
-	# # cat_pixel_colors = list(cat_picture.thumbnail.getdata())	
-	# # # Look at every 300th pixel, and draw it as a skinny stripe 
-	# # # This style is sometimes used to visualize movie color palettes
-	# # # https://happycoding.io/gallery/movie-colors/index
-	# # # and gives us an overall sense of the colors
-	# # cat_pixel_colors = cat_pixel_colors[::200]
-	# # draw_colors(im, rect_size=(300, 1), rgb_colors=cat_pixel_colors)
-	# # # im.show()
+	# # Another cat picture, should have *different* data
+	cat_path2 = os.path.join("images", "cat2.png")
+	cat_picture2 = Cat_Picture(cat_path2)
+	cat_picture2.print_data()
+	cat_picture2.thumbnail.show()
+	assert cat_picture.full_image.size[0] != cat_picture2.full_image.size[0], "Make sure you are loading the path passed in as a parameter"
 	
 	
-	# # print("\n" + "-"*80 + "\nCat Picture Pixels!\n")
-
-	# # # Colors and drawing rectangles
-	# # # Ok, so we have an image, which is a big list of RGB colors
-	# # # We can access and display these colors in different ways
-
-	# # # Lets use the cat thumbnail as our test image
-	# # # and get the list of all its pixels
-	# # test_image = cat_picture.thumbnail
-	# # pixels = list(test_image.getdata())
+	# # Now we can use this to visualize color data!
+	# # Get the pixel data from the thumbnail and turn it into a list
+	cat_pixel_colors = list(cat_picture.thumbnail.getdata())	
+	# # Look at every 300th pixel, and draw it as a skinny stripe 
+	# # This style is sometimes used to visualize movie color palettes
+	# # https://happycoding.io/gallery/movie-colors/index
+	# # and gives us an overall sense of the colors
+	cat_pixel_colors = cat_pixel_colors[::200]
+	draw_colors(im, rect_size=(300, 1), rgb_colors=cat_pixel_colors)
+	im.show()
 	
-	# # # Here are all the pixels in the image.  Beautiful, right?
-	# # # print(pixels)
+	
+	print("\n" + "-"*80 + "\nCat Picture Pixels!\n")
 
-	# # # .. and just the one in the top left
-	# # # print(pixels[0])
+	# # Colors and drawing rectangles
+	# # Ok, so we have an image, which is a big list of RGB colors
+	# # We can access and display these colors in different ways
+
+	# # Lets use the cat thumbnail as our test image
+	# # and get the list of all its pixels
+	# test_image = cat_picture.thumbnail
+	# pixels = list(test_image.getdata())
+	
+	# # Here are all the pixels in the image.  Beautiful, right?
+	# # print(pixels)
+
+	# # .. and just the one in the top left
+	# # print(pixels[0])
 
 
-	# # # We can get individual pixels from some point in the image
-	# # # with (x,y) coordinates
-	# # # Here is the upper left hand corrner of the image
-	# # sample_point = (5,5)
-	# # # And the bottom right (uncomment to use this instead)
-	# # # sample_point = (200,100)
+	# # We can get individual pixels from some point in the image
+	# # with (x,y) coordinates
+	# # Here is the upper left hand corrner of the image
+	# sample_point = (5,5)
+	# # And the bottom right (uncomment to use this instead)
+	# # sample_point = (200,100)
 
 	
-	# # one_pixel_color = test_image.getpixel(sample_point)
-	# # print("one pixel", one_pixel_color)
+	# one_pixel_color = test_image.getpixel(sample_point)
+	# print("one pixel", one_pixel_color)
 
 
-	# # # We can also make a copy of the cat picture and draw over it
-	# # # for a visualization that shows colors AND the original photo
-	# # cat_copy = cat_picture.full_image.copy()
-	# # draw_colors(cat_copy, rect_size=(300, 1), rgb_colors=cat_pixel_colors)
+	# # We can also make a copy of the cat picture and draw over it
+	# # for a visualization that shows colors AND the original photo
+	# cat_copy = cat_picture.full_image.copy()
+	# draw_colors(cat_copy, rect_size=(300, 1), rgb_colors=cat_pixel_colors)
 
-	# # # Make sure you see the rectangles on here, too!
-	# # # cat_copy.show()	
+	# # Make sure you see the rectangles on here, too!
+	# # cat_copy.show()	
 
-
-	# # # #--------------------------------------------------------
-	# # # # How else can we visualize all the pixels?
-	# # # We can re-use your scatterplot!
-
-	# # # # How many cats to show?
-	# # # cat_count = 9
-	# # # # Which cat to start at (change this to see different cats)
-	# # # cat_offset = 22
-
-	# # # # Load several cats
-	# # # several_cats = [Cat_Picture(os.path.join("images", f"cat{i}.png")) 
-	# # # 	for i in range(cat_offset, cat_count + cat_offset)]
-	
-	# # # cols = 3
-	# # # rows = cat_count//3
-	# # # # Make a 3x3
-	# # # figure, axis = plt.subplots(rows, cols, subplot_kw=dict(projection='3d'))
-
-	# # # for i in range(0, len(several_cats)):
-	# # # 	# Where in the plot does cat's subplot this go?
-	# # # 	x = i//cols
-	# # # 	y = i%cols
-	# # # 	ax = axis[x, y]
-	
-	# # # 	several_cats[i].create_scatterplot(ax)
-
-	# # # plt.show()
 
 	# # #--------------------------------------------------------
-	# # # Task 8: calculating the palette
+	# # # How else can we visualize all the pixels?
+	# # We can re-use your scatterplot!
 
-	# # # Those plots were neat, but its hard to do statistics on them
-	# # # Can you see that some of the graphs have *clusters* of pixels?
-	# # # It would be neat to identify particular groups of colors that are similar
-	# # # K-means clustering does that!
-	# # # https://towardsdatascience.com/k-means-clustering-explain-it-to-me-like-im-10-e0badf10734a
-
-	# # We can calculate the "clusters" with this function
-	# # to get a smaller set of "representative colors" for this image
-	# pixels = cat_picture.thumbnail.getdata()
-	# clusters = calculate_clusters(pixels, cluster_count=10)
-	# print("Clusters found", clusters)
-	
-	# # # And display them with our draw_colors again!
-	# # # Try changing the number of clusters.  
-	# # # What is a good number of clusters for this image?
-	# cat_copy = cat_picture.full_image.copy()
-	# # draw_colors(cat_copy, rect_size=(300, 40), rgb_colors=clusters)
-	# # cat_copy.show()
-
-	# # But we would rather have *named* colors, so that we can describe 
-	# # this palette to someone else ("its a lot of greys and blues")
-	# # Implement set_palette to get the palette of Color instances
-	# # that best represent this image 
-	# # (you may get a different set of clusters, 
-	# # I haven't figured out how to make it deterministic)
-
-	# cat_picture.set_palette(xkcd_colors, cluster_count=7)
-	# print(color_list_to_string(cat_picture.palette))
-	# palette_rgb = [c.rgb for c in cat_picture.palette]
-	# palette_names = [c.name for c in cat_picture.palette]
-	# draw_colors(cat_copy, rect_size=(300, 40), rgb_colors=palette_rgb, labels=palette_names, font=font)
-	# cat_copy.show()
-
-	# # # #--------------------------------------------------------
-	# # # Test Task 9: Cat detection
-	# # # Implement draw_detected_cats
-
-	# cat_diagram = cat_picture.draw_detected_cats()
-	# cat_diagram.show()
-
-	
-	# # print("\nDetecting multiple cats on many photos")
-	# # # Notice that it can't find all cats
-
-	# # # How many cats to show? 
-	# # # Reduce if you have a slow computer, or increase to see more
-	# # cat_count = 25
+	# # # How many cats to show?
+	# # cat_count = 9
 	# # # Which cat to start at (change this to see different cats)
-	# # cat_offset = 0
+	# # cat_offset = 22
 
+	# # # Load several cats
 	# # several_cats = [Cat_Picture(os.path.join("images", f"cat{i}.png")) 
 	# # 	for i in range(cat_offset, cat_count + cat_offset)]
+	
+	# # cols = 3
+	# # rows = cat_count//3
+	# # # Make a 3x3
+	# # figure, axis = plt.subplots(rows, cols, subplot_kw=dict(projection='3d'))
 
-	# # # Test Task 10
-	# # [c.detect_cats() for c in several_cats]
-	# # sorted_cats = sort_cats(several_cats)
+	# # for i in range(0, len(several_cats)):
+	# # 	Where in the plot does cat's subplot this go?
+	# # 	x = i//cols
+	# # 	y = i%cols
+	# # 	ax = axis[x, y]
+	
+	# # 	several_cats[i].create_scatterplot(ax)
 
-	# # # Make a collage of all the detected cat photos
-	# # collage = make_collage((900, 900), [cat.draw_detected_cats() for cat in sorted_cats])
-	# # collage.show()
+	# # plt.show()
 
-	# # assert len(sorted_cats[0].detected_cats) > len(sorted_cats[-1].detected_cats), "sort most-to-lease"
+	# #--------------------------------------------------------
+	# # Task 8: calculating the palette
+
+	# # Those plots were neat, but its hard to do statistics on them
+	# # Can you see that some of the graphs have *clusters* of pixels?
+	# # It would be neat to identify particular groups of colors that are similar
+	# # K-means clustering does that!
+	# # https://towardsdatascience.com/k-means-clustering-explain-it-to-me-like-im-10-e0badf10734a
+
+	# We can calculate the "clusters" with this function
+	# to get a smaller set of "representative colors" for this image
+	pixels = cat_picture.thumbnail.getdata()
+	clusters = calculate_clusters(pixels, cluster_count=10)
+	print("Clusters found", clusters)
+	
+	# # And display them with our draw_colors again!
+	# # Try changing the number of clusters.  
+	# # What is a good number of clusters for this image?
+	cat_copy = cat_picture.full_image.copy()
+	# draw_colors(cat_copy, rect_size=(300, 40), rgb_colors=clusters)
+	# cat_copy.show()
+
+	# But we would rather have *named* colors, so that we can describe 
+	# this palette to someone else ("its a lot of greys and blues")
+	# Implement set_palette to get the palette of Color instances
+	# that best represent this image 
+	# (you may get a different set of clusters, 
+	# I haven't figured out how to make it deterministic)
+
+	cat_picture.set_palette(xkcd_colors, cluster_count=7)
+	print(color_list_to_string(cat_picture.palette))
+	palette_rgb = [c.rgb for c in cat_picture.palette]
+	palette_names = [c.name for c in cat_picture.palette]
+	draw_colors(cat_copy, rect_size=(300, 40), rgb_colors=palette_rgb, labels=palette_names, font=font)
+	cat_copy.show()
+
+	# # #--------------------------------------------------------
+	# # Test Task 9: Cat detection
+	# # Implement draw_detected_cats
+
+	cat_diagram = cat_picture.draw_detected_cats()
+	cat_diagram.show()
+
+	
+	# print("\nDetecting multiple cats on many photos")
+	# # Notice that it can't find all cats
+
+	# How many cats to show? 
+	# Reduce if you have a slow computer, or increase to see more
+	cat_count = 25
+	# Which cat to start at (change this to see different cats)
+	cat_offset = 0
+
+	several_cats = [Cat_Picture(os.path.join("images", f"cat{i}.png")) 
+		for i in range(cat_offset, cat_count + cat_offset)]
+
+	# Test Task 10
+	[c.detect_cats() for c in several_cats]
+	sorted_cats = sort_cats(several_cats)
+
+	# Make a collage of all the detected cat photos
+	collage = make_collage((900, 900), [cat.draw_detected_cats() for cat in sorted_cats])
+	collage.show()
+
+	assert len(sorted_cats[0].detected_cats) > len(sorted_cats[-1].detected_cats), "sort most-to-lease"
 
 
 
